@@ -115,8 +115,8 @@ def scene_shot(base: Image.Image, name: str, title: str, points: str, p: float) 
     shot_panel(base, name, (p - 0.05) / 0.3)
     d = ImageDraw.Draw(base, 'RGBA')
     ap = ease(p / 0.2)
-    label(d, title, 110 + int((1 - ap) * 16), 46, TEXT, True, spacing=10)
-    label(d, points, 196 + int((1 - ap) * 12), 23, GOLD)
+    label(d, title, 110 + int((1 - ap) * 16), 44, TEXT, True, spacing=10)
+    label(d, points, 196 + int((1 - ap) * 12), 21, GOLD, spacing=10)
     d.line([(72, 296), (420, 296)], fill=GOLD + (120,), width=2)
 
 
@@ -128,7 +128,7 @@ def scene_outro(base: Image.Image, p: float) -> None:
     label(d, '23 模块 / 17 互动图解 / eNSP 真机桥接实验室', 344 + int((1 - a) * 10), 24, DIM)
     d.rounded_rectangle([72, 432, 908, 502], radius=14, fill=SURFACE + (int(235 * a),),
                         outline=MINT + (int(90 * a),))
-    d.text((96, 452), '在线体验：37jvuljvvx51pwvubrz.traesite.cn',
+    d.text((96, 452), '在线体验：https://37jvuljvvx51pwvubrz.traesite.cn',
            font=font(25), fill=MINT + (int(255 * a),))
 
 
@@ -136,11 +136,11 @@ SCENES = [
     (0.0, 7.0, scene_intro, None),
     (7.0, 16.0, scene_value, None),
     (16.0, 26.0, scene_shot, ('home.png', '可视化互动图解',
-                              'STP / OSPF / BGP / VXLAN，拖动点击看协议过程')),
-    (26.0, 36.0, scene_shot, ('lab-ensp.png', 'eNSP 真机桥接实验室',
-                              '拓扑可视化 · Web 终端 · AI 助教 · 远程验收')),
+                              'STP / OSPF / BGP / VXLAN\n拖动点击，看协议过程')),
+    (26.0, 36.0, scene_shot, ('lab-ensp.png', 'eNSP 桥接实验室',
+                              '拓扑可视化 · Web 终端\nAI 助教 · 远程验收')),
     (36.0, 45.0, scene_shot, ('path-cloud.png', '云网转型路线',
-                              'VLAN/VRF → VPC，OSPF/BGP → 云上互联')),
+                              'VLAN/VRF → VPC\nOSPF/BGP → 云上互联')),
     (45.0, 51.0, scene_outro, None),
 ]
 TOTAL = SCENES[-1][1]
