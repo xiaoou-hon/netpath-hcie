@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<topo version="1.0" name="缺少必要字段">
+  <devices>
+    <device id="broken" model="AR2220" x="0" y="0" com_port="2099" />
+  </devices>
+  <links />
+</topo>

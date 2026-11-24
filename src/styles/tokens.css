@@ -1,0 +1,86 @@
+/* NetPath · 视觉令牌 —— Operator's Console 暖墨质感
+   单一 committed 强调色（琥珀金）+ 暖色中性阶，
+   刻意避开通用 AI 感的「青→蓝→紫」渐变与冷调海军蓝。 */
+
+:root {
+  /* 暖色墨黑中性阶（不是泛蓝的通用深色） */
+  --bg: #0b0e14;
+  --bg-soft: #10141c;
+  --surface: #151a24;
+  --surface-2: #1c2230;
+  --surface-3: #252c3c;
+  --border: rgba(214, 198, 168, 0.10);
+  --border-strong: rgba(214, 198, 168, 0.22);
+
+  --text: #ece7db;
+  --text-dim: #a59d8e;
+  --text-faint: #6e685b;
+
+  /* 单一主强调色：精致琥珀金 —— 仪表盘/仪器质感 */
+  --accent: #e9b456;
+  /* 次强调：柔薄荷 —— 终端 / 实时数据 */
+  --accent-2: #7fd1a8;
+  /* 三级数据色：暖陶土（原紫色，供可视化区分） */
+  --accent-3: #e08a6b;
+
+  --ok: #6ee7b7;
+  --warn: #fbbf24;
+  --danger: #f87171;
+  --info: #93c5fd;
+
+  --accent-soft: rgba(233, 180, 86, 0.12);
+  --accent-2-soft: rgba(127, 209, 168, 0.12);
+  --accent-3-soft: rgba(224, 138, 107, 0.14);
+  --ok-soft: rgba(110, 231, 183, 0.12);
+  --warn-soft: rgba(251, 191, 36, 0.12);
+  --danger-soft: rgba(248, 113, 113, 0.12);
+
+  /* 暖色琥珀微光 —— 替代彩虹渐变，仅作细腻高光 */
+  --gradient: linear-gradient(135deg, #f2c57c 0%, #d99a3d 100%);
+
+  --radius-sm: 8px;
+  --radius: 14px;
+  --radius-lg: 20px;
+  --shadow: 0 18px 44px rgba(0, 0, 0, 0.48);
+  --shadow-soft: 0 6px 22px rgba(0, 0, 0, 0.32);
+  --glow-accent: 0 0 0 1px rgba(233, 180, 86, 0.25), 0 8px 24px rgba(233, 180, 86, 0.12);
+
+  --font: 'PingFang SC', 'Microsoft YaHei', 'Hiragino Sans GB', 'Noto Sans SC',
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --mono: 'Cascadia Code', 'JetBrains Mono', Consolas, 'Courier New', monospace;
+  --dur: 220ms;
+  --sidebar-w: 268px;
+  --topbar-h: 62px;
+}
+
+[data-theme='light'] {
+  --bg: #f3efe7;
+  --bg-soft: #ebe6dc;
+  --surface: #fffdf8;
+  --surface-2: #f4efe4;
+  --surface-3: #e7e0d2;
+  --border: rgba(60, 46, 24, 0.12);
+  --border-strong: rgba(60, 46, 24, 0.24);
+  --text: #1f1a12;
+  --text-dim: #5a5243;
+  --text-faint: #8a8170;
+  --accent: #b8842a;
+  --accent-2: #2f9e6f;
+  --accent-3: #c25a3e;
+  --accent-soft: rgba(184, 132, 42, 0.1);
+  --accent-2-soft: rgba(47, 158, 111, 0.1);
+  --accent-3-soft: rgba(194, 90, 62, 0.1);
+  --shadow: 0 14px 34px rgba(60, 46, 24, 0.14);
+  --shadow-soft: 0 5px 16px rgba(60, 46, 24, 0.09);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

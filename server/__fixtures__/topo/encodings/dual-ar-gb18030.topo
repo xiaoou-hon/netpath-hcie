@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="GB18030"?>
+<topo version="1.0" name="双 AR 编码样例">
+  <devices>
+    <device id="ar1" name="AR1" model="AR2220" x="120" y="160" com_port="2001">
+      <board slot="0" model="AR2220-MAIN">
+        <interface_group prefix="GigabitEthernet" subslot="0" first_port="0" count="3" />
+      </board>
+      <board slot="4" model="2GE">
+        <interface_group prefix="GigabitEthernet" subslot="0" first_port="0" count="2" />
+      </board>
+    </device>
+    <device id="ar2" name="AR2" model="AR2220" x="420" y="160" com_port="2002">
+      <board slot="0" model="AR2220-MAIN">
+        <interface_group prefix="GigabitEthernet" subslot="0" first_port="0" count="3" />
+      </board>
+    </device>
+  </devices>
+  <links>
+    <link id="link1" name="AR1-AR2" source_device="ar1" source_interface="GigabitEthernet4/0/1" target_device="ar2" target_interface="GigabitEthernet0/0/2" />
+  </links>
+</topo>

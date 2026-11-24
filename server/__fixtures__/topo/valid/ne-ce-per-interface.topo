@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<topo version="1.0" name="NE-CE 逐接口样例">
+  <devices>
+    <device id="ne1" name="NE1" model="NE40E" x="100" y="140" com_port="2011">
+      <board slot="1" model="NE-LPUE">
+        <interface name="GigabitEthernet1/0/0" />
+        <interface name="GigabitEthernet1/0/7" />
+      </board>
+    </device>
+    <device id="ce1" name="CE1" model="CE12800" x="400" y="140" com_port="2012">
+      <board slot="2" model="CE-LPUE">
+        <interface name="10GE2/0/3" />
+        <interface name="10GE2/0/4" />
+      </board>
+    </device>
+  </devices>
+  <links>
+    <link id="link1" name="NE1-CE1" source_device="ne1" source_interface="GigabitEthernet1/0/7" target_device="ce1" target_interface="10GE2/0/3" />
+  </links>
+</topo>

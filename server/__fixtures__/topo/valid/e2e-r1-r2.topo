@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<topo version="1.0" name="E2E R1-R2">
+  <devices>
+    <device id="r1" name="R1" model="AR2220" x="160" y="180" com_port="2001">
+      <board slot="0" model="AR2220-MAIN">
+        <interface name="GigabitEthernet0/0/0" />
+        <interface name="GigabitEthernet0/0/1" />
+      </board>
+    </device>
+    <device id="r2" name="R2" model="AR2220" x="460" y="240" com_port="2002">
+      <board slot="0" model="AR2220-MAIN">
+        <interface name="GigabitEthernet0/0/0" />
+        <interface name="GigabitEthernet0/0/1" />
+      </board>
+    </device>
+  </devices>
+  <links>
+    <link id="link1" name="R1-R2" source_device="r1" source_interface="GigabitEthernet0/0/1" target_device="r2" target_interface="GigabitEthernet0/0/1" />
+  </links>
+</topo>

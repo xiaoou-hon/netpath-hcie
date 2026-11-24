@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topo [<!ENTITY lab "must-not-expand">]>
+<topo version="1.0" name="&lab;">
+  <devices />
+  <links />
+</topo>

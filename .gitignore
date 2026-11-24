@@ -1,0 +1,36 @@
+# 依赖与构建产物
+node_modules/
+dist/
+*.tsbuildinfo
+
+# Python 虚拟环境与缓存
+python/.venv/
+python/__pycache__/
+__pycache__/
+*.pyc
+
+# 本地版本归档与历史快照（历史版本信息见 docs/VERSIONS.md）
+releases/
+versions/
+
+# 编辑器与工具目录
+.claude/
+.trae/
+.trae-html-share-packages/
+.screenshots/
+.vscode/
+.idea/
+
+# 日志与临时文件
+*.log
+debug.log
+nul
+.DS_Store
+Thumbs.db
+
+# 本地环境配置
+.env
+.env.local
+
+# 宣传视频产物（生成脚本与截图素材保留）
+promo/*.mp4

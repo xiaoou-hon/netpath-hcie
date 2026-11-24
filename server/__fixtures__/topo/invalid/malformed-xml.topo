@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<topo version="1.0" name="异常 XML">
+  <devices>
+    <device id="ar1" name="AR1" model="AR2220" x="0" y="0" com_port="2001">
+  </devices>
+</topo>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<topo version="1.0" name="非 VRP 节点样例">
+  <devices>
+    <device id="pc1" name="PC1" model="PC" x="80" y="100" com_port="2004">
+      <board slot="0" model="PC-MAIN">
+        <interface name="Ethernet0/0/0" />
+      </board>
+    </device>
+    <device id="server1" name="Server1" model="Server" x="280" y="100" com_port="0">
+      <board slot="0" model="SERVER-MAIN">
+        <interface name="Ethernet0/0/0" />
+      </board>
+    </device>
+    <device id="cloud1" name="Cloud1" model="Cloud" x="80" y="300" com_port="0" />
+    <device id="ar0" name="AR0" model="AR2220" x="280" y="300" com_port="0">
+      <board slot="0" model="AR2220-MAIN">
+        <interface_group prefix="GigabitEthernet" subslot="0" first_port="0" count="1" />
+      </board>
+    </device>
+  </devices>
+  <links />
+</topo>
