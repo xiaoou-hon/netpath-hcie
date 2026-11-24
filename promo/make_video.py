@@ -1,19 +1,26 @@
-"""NetPath 宣传视频生成器：真实界面截图 + 实况数据，输出 1280x720 / 24fps MP4。
+"""NetPath 宣传视频渲染器：读取 timings.json 按真实配音时长对齐画面。
 
+截图来自线上真实页面，文案来自项目 README 与页面实况，不虚构数据。
+先渲染静帧视频，再把 audio_mix.wav（旁白 + 氛围底乐）混入输出 MP4。
 配色沿用项目 tokens.css：暖墨底 #0b0e14、琥珀金 #e9b456、柔薄荷 #7fd1a8。
-所有文案来自项目 README 与线上页面实况，不虚构数据。
 """
 from __future__ import annotations
 
+import json
 import math
 import os
+import subprocess
 
 import imageio_ffmpeg
 from PIL import Image, ImageDraw, ImageFont
 
 W, H, FPS = 1280, 720, 24
-SHOTS = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'shots')
-OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'netpath-promo.mp4')
+BASE = os.path.dirname(os.path.abspath(__file__))
+SHOTS = os.path.join(BASE, 'shots')
+OUT = os.path.join(BASE, 'netpath-promo.mp4')
+SILENT = os.path.join(BASE, '_silent.mp4')
+TIMINGS = os.path.join(BASE, 'timings.json')
+AUDIO = os.path.join(BASE, 'audio_mix.wav')
 
 BG = (11, 14, 20)
 SURFACE = (21, 26, 36)
@@ -54,17 +61,17 @@ def backdrop(t: float) -> Image.Image:
     return Image.alpha_composite(img.convert('RGBA'), glow).convert('RGB')
 
 
-def shot_panel(base: Image.Image, name: str, alpha: float) -> None:
+def shotPanel(base: Image.Image, name: str, alpha: float) -> None:
     """把截图完整缩放进右侧面板，带细边框与淡入。"""
     path = os.path.join(SHOTS, name)
     if not os.path.exists(path):
         return
     pic = Image.open(path).convert('RGB')
-    box_w, box_h = 760, 545
-    scale = min(box_w / pic.width, box_h / pic.height)
+    boxW, boxH = 760, 545
+    scale = min(boxW / pic.width, boxH / pic.height)
     pic = pic.resize((int(pic.width * scale), int(pic.height * scale)), Image.Resampling.LANCZOS)
-    px = 470 + (box_w - pic.width) // 2
-    py = 96 + (box_h - pic.height) // 2
+    px = 470 + (boxW - pic.width) // 2
+    py = 96 + (boxH - pic.height) // 2
     panel = Image.new('RGBA', (W, H), (0, 0, 0, 0))
     pd = ImageDraw.Draw(panel)
     pd.rounded_rectangle([px - 8, py - 8, px + pic.width + 8, py + pic.height + 8],
@@ -82,7 +89,7 @@ def label(d: ImageDraw.ImageDraw, text: str, y: int, size: int, color=TEXT,
     return y
 
 
-def scene_intro(base: Image.Image, p: float) -> None:
+def sceneIntro(base: Image.Image, p: float) -> None:
     d = ImageDraw.Draw(base, 'RGBA')
     a = ease(p / 0.18)
     d.rounded_rectangle([72, 150 + int((1 - a) * 18), 108, 186 + int((1 - a) * 18)],
@@ -91,18 +98,18 @@ def scene_intro(base: Image.Image, p: float) -> None:
     label(d, 'NetPath', 214 + int((1 - a) * 24), 82, TEXT, True, spacing=6)
     label(d, '网络工程师成长引擎', 330 + int((1 - a) * 20), 40, GOLD, True)
     label(d, '对标 HCIE-Datacom · 从零基础到专家', 410 + int((1 - a) * 16), 25, DIM)
-    d.line([(72, 482), (72 + int(520 * ease(p)) , 482)], fill=GOLD + (200,), width=3)
+    d.line([(72, 482), (72 + int(520 * ease(p)), 482)], fill=GOLD + (200,), width=3)
 
 
-def scene_value(base: Image.Image, p: float) -> None:
+def sceneValue(base: Image.Image, p: float) -> None:
     d = ImageDraw.Draw(base, 'RGBA')
     label(d, '把网络真正看懂', 118, 62, TEXT, True, spacing=8)
     label(d, '从一根网线到一张企业网，再到云上网络', 212, 30, GOLD)
-    stats = [('23', '课程模块'), ('136+', '可视化课时'), ('17', '互动图解'), ('240+', '自测题'), ('65h', '总学时')]
-    x = 72
+    stats = [('23', '课程模块'), ('136+', '可视化课时'), ('17', '互动图解'),
+             ('240+', '自测题'), ('65h', '总学时')]
     for i, (num, name) in enumerate(stats):
         ap = ease((p - 0.08 - i * 0.06) / 0.16)
-        bx = x + i * 218
+        bx = 72 + i * 218
         d.rounded_rectangle([bx, 300, bx + 196, 448], radius=16,
                             fill=SURFACE + (int(225 * ap),), outline=GOLD + (int(60 * ap),))
         d.text((bx + 20, 326), num, font=font(52, True), fill=GOLD + (int(255 * ap),))
@@ -111,8 +118,8 @@ def scene_value(base: Image.Image, p: float) -> None:
           494, 22, DIM)
 
 
-def scene_shot(base: Image.Image, name: str, title: str, points: str, p: float) -> None:
-    shot_panel(base, name, (p - 0.05) / 0.3)
+def sceneShot(base: Image.Image, name: str, title: str, points: str, p: float) -> None:
+    shotPanel(base, name, (p - 0.05) / 0.3)
     d = ImageDraw.Draw(base, 'RGBA')
     ap = ease(p / 0.2)
     label(d, title, 110 + int((1 - ap) * 16), 44, TEXT, True, spacing=10)
@@ -120,7 +127,7 @@ def scene_shot(base: Image.Image, name: str, title: str, points: str, p: float) 
     d.line([(72, 296), (420, 296)], fill=GOLD + (120,), width=2)
 
 
-def scene_outro(base: Image.Image, p: float) -> None:
+def sceneOutro(base: Image.Image, p: float) -> None:
     d = ImageDraw.Draw(base, 'RGBA')
     a = ease(p / 0.2)
     label(d, '把网络真正看懂', 156 + int((1 - a) * 20), 66, TEXT, True, spacing=10)
@@ -132,21 +139,37 @@ def scene_outro(base: Image.Image, p: float) -> None:
            font=font(25), fill=MINT + (int(255 * a),))
 
 
-SCENES = [
-    (0.0, 7.0, scene_intro, None),
-    (7.0, 16.0, scene_value, None),
-    (16.0, 26.0, scene_shot, ('home.png', '可视化互动图解',
-                              'STP / OSPF / BGP / VXLAN\n拖动点击，看协议过程')),
-    (26.0, 36.0, scene_shot, ('lab-ensp.png', 'eNSP 桥接实验室',
-                              '拓扑可视化 · Web 终端\nAI 助教 · 远程验收')),
-    (36.0, 45.0, scene_shot, ('path-cloud.png', '云网转型路线',
-                              'VLAN/VRF → VPC\nOSPF/BGP → 云上互联')),
-    (45.0, 51.0, scene_outro, None),
-]
-TOTAL = SCENES[-1][1]
+# 场景键 -> 渲染函数与参数，与 make_audio.py 的 NARRATION 顺序一致
+HANDLERS = {
+    'intro': (sceneIntro, None),
+    'value': (sceneValue, None),
+    'viz': (sceneShot, ('home.png', '可视化互动图解',
+                        'STP / OSPF / BGP / VXLAN\n拖动点击，看协议过程')),
+    'ensp': (sceneShot, ('lab-ensp.png', 'eNSP 桥接实验室',
+                         '拓扑可视化 · Web 终端\nAI 助教 · 远程验收')),
+    'cloud': (sceneShot, ('path-cloud.png', '云网转型路线',
+                          'VLAN/VRF → VPC\nOSPF/BGP → 云上互联')),
+    'outro': (sceneOutro, None),
+}
 
 
-def render_frame(idx: int) -> Image.Image:
+def loadScenes() -> tuple[list[tuple], float]:
+    """从 timings.json 读取场景时间轴；缺失时回退到默认时长。"""
+    if not os.path.exists(TIMINGS):
+        raise FileNotFoundError(f'缺少 {TIMINGS}，请先运行 make_audio.py')
+    with open(TIMINGS, encoding='utf-8') as handle:
+        data = json.load(handle)
+    scenes = []
+    for item in data['scenes']:
+        fn, args = HANDLERS[item['key']]
+        scenes.append((float(item['start']), float(item['end']), fn, args))
+    return scenes, float(data['total'])
+
+
+SCENES, TOTAL = loadScenes()
+
+
+def renderFrame(idx: int) -> Image.Image:
     t = idx / FPS
     scene = next((s for s in SCENES if s[0] <= t < s[1]), SCENES[-1])
     start, end, fn, args = scene
@@ -163,18 +186,32 @@ def render_frame(idx: int) -> Image.Image:
     return img
 
 
+def muxAudio() -> None:
+    """把旁白与底乐混入静帧视频，用 AAC 编码保留兼容性和完整音轨。"""
+    if not os.path.exists(AUDIO):
+        raise FileNotFoundError(f'缺少 {AUDIO}，请先运行 make_audio.py')
+    subprocess.run([
+        imageio_ffmpeg.get_ffmpeg_exe(), '-y', '-loglevel', 'error',
+        '-i', SILENT, '-i', AUDIO,
+        '-c:v', 'copy', '-c:a', 'aac', '-b:a', '128k',
+        '-map', '0:v:0', '-map', '1:a:0', '-shortest', OUT,
+    ], check=True)
+
+
 def main() -> None:
     writer = imageio_ffmpeg.write_frames(
-        OUT, (W, H), fps=FPS, codec='libx264', pix_fmt_in='rgb24',
+        SILENT, (W, H), fps=FPS, codec='libx264', pix_fmt_in='rgb24',
         output_params=['-crf', '20', '-preset', 'medium', '-movflags', '+faststart'],
     )
     writer.send(None)
     for i in range(int(TOTAL * FPS)):
-        writer.send(render_frame(i).tobytes())
+        writer.send(renderFrame(i).tobytes())
         if i % 120 == 0:
             print(f'frame {i}/{int(TOTAL * FPS)}', flush=True)
     writer.close()
-    print('saved', OUT, os.path.getsize(OUT), 'bytes')
+    muxAudio()
+    os.remove(SILENT)
+    print('saved', OUT, os.path.getsize(OUT), 'bytes', flush=True)
 
 
 if __name__ == '__main__':

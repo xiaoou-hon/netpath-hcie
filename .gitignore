@@ -35,3 +35,5 @@ Thumbs.db
 
 # 宣传视频产物（生成脚本与截图素材保留）
 promo/*.mp4
+promo/audio_mix.wav
+promo/voice/

@@ -1,0 +1,41 @@
+{
+  "total": 57.332,
+  "scenes": [
+    {
+      "start": 0.0,
+      "end": 9.318,
+      "voiceStart": 0.45,
+      "key": "intro"
+    },
+    {
+      "start": 9.318,
+      "end": 20.064,
+      "voiceStart": 9.768,
+      "key": "value"
+    },
+    {
+      "start": 20.064,
+      "end": 29.542,
+      "voiceStart": 20.514,
+      "key": "viz"
+    },
+    {
+      "start": 29.542,
+      "end": 39.26,
+      "voiceStart": 29.992,
+      "key": "ensp"
+    },
+    {
+      "start": 39.26,
+      "end": 48.522,
+      "voiceStart": 39.71,
+      "key": "cloud"
+    },
+    {
+      "start": 48.522,
+      "end": 57.332,
+      "voiceStart": 48.972,
+      "key": "outro"
+    }
+  ]
+}
